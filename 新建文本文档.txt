@@ -1,0 +1,566 @@
+绝对定位要加宽高才有用，不要忘了！！！
+
+bootstrap使用IE的盒模型
+设置内边框 box-sizing: border-box; 外边框 box-sizing: content-box;
+context-box：W3C的标准盒子模型，设置元素的 height/width 属性指的是content部分的高/宽
+border-box：IE传统盒子模型。设置元素的height/width属性指的是border + padding + content部分的高/宽
+
+
+利用边框画些简单的不规则图形：
+<div id="demo">
+    <div id="demo1"></div>
+</div>
+#demo{
+  width:100px;height:100px;
+  border-radius: 50%;
+}
+#demo1{
+  position: relative;
+  left:50px;
+  width:0;
+  height:0;
+  border-right: 50px solid #fff;
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+}
+禁止选中
+-webkit-touch-callout: none; /* iOS Safari */
+
+-webkit-user-select: none; /* Chrome/Safari/Opera */
+
+-khtml-user-select: none; /* Konqueror */
+
+-moz-user-select: none; /* Firefox */
+
+-ms-user-select: none; /* Internet Explorer/Edge */
+
+https://www.html5tricks.com/demo/html5-canvas-3d-model-camera/index.html
+a标签去下划线
+text-decoration:none;
+setTimeout 0 的意义是，使代码异步执行，也就是说，只要有setTimeout函数，里面的内容就会脱离原来的执行顺序流，
+比如:
+alert(1)
+setTimeout(alert(2),0)
+alert(3)
+输出的结果是1 3 2
+
+未来元素绑定：
+$(function(){
+  $(document).on('click','.delete',function(){
+      console.log($(this));
+      $(this).parent().children("p").eq(0).css("color", "blue");
+  })
+})
+
+字体大小响应式:
+function fontSize(){
+    var deviceWidth=document.documentElement.clientWidth>768?768:document.documentElement.clientWidth;
+    document.documentElement.style.fontSize=(deviceWidth/25)+"px";
+}
+fontSize();
+window.onresize=fontSize;
+
+浏览器记录优先级(用户名、邮箱、密码等)：
+type>name>id>class
+一般用name告诉浏览器这个input哪种类型的输入，如name='email'
+
+php设置编码：
+header('Content-type:text/html;charset=utf-8');
+mysqli_query($connID,'set names utf8');
+php允许跨域ajax访问
+header('Access-Control-Allow-Origin:*');
+
+js判断一个数是不是整数：
+1、位运算
+function isInteger(num) {
+ return (num | 0) === num//or return (num ^ 0) === num
+}
+位运算只对整数部分生效，可以用来判断
+2、用parseInt函数判断
+function isInteger(num) {
+ return parseInt(num, 10) === num
+}
+但是这个方法只适用于20位以下的数，因为20位以上的数是以科学计数法的形式保存的，而parseInt函数会将第一个参数默认转化为字符串形式。
+3、用取整函数判断
+常见的取整函数如Math.round、Math.ceil、Math.floor等。
+function isInteger(num) {
+ return Math.round(num) === num
+}
+4、用Number.isInteger判断
+ES6中新提供的内置判断函数
+Number.isInteger(num)
+
+外联的css里面的!important优先级也比内联高，内嵌样式优先级永远最高
+
+float脱离文档流和position脱离文档流的区别：
+使用float脱离文档流时，其他盒子会无视这个元素，但其他盒子内的文本依然会为这个元素让出位置，环绕在周围
+绝对定位脱离文档流会显示在其他文字的上方
+相对定位不脱离文档流，其原始位置会一直被留着，伪脱离
+
+设置不换行，多余文字用...代替：
+white-space:nowrap;
+overflow: hidden;
+text-overflow:ellipsis;
+
+浏览器默认不允许访问本地的json数据，按照网上的步骤添加' --allow-file-access-from-files'无效
+把json数据直接存储在js文件中可以解决问题
+
+所有在全局作用域中声明的变量和函数都会变成window对象的属性和方法，
+而初始化未定义的变量会变成全局变量，也就是window的属性，但是和在全局作用域中声明的变量有区别
+声明的变量不能用delete删除，尽管它会变成window的属性，而未声明的全局变量可以被delete删除
+原因是var声明的变量，在成为window属性时会有一个名为[[Configurable]]的特性被设为false，所以不能delete。
+
+可以用window属性查询的方式查询某个全局变量是否存在
+
+跳转页面的几种方法：
+window.open()
+window.location.assign()
+window.location.href()=''//和assign相同
+window.location.reload()
+window.location.replace()//replace方法不会在history中记录，无法后退
+//location既是window的属性，也是document的属性
+
+数组平均数：
+const average = arr => arr.reduce((acc, val) => acc + val, 0) / arr.length;
+// average([1,2,3]) -> 2
+大写每个单词的首字母：
+const capitalizeEveryWord = str => str.replace(/\b[a-z]/g, char => char.toUpperCase());//\b是单词边界
+// capitalizeEveryWord('hello world!') -> 'Hello World!'
+//改进，考虑I'm的单引号。但是这并不是一劳永逸的，因为单引号后面也可能跟大写。
+function titleCase(str) {
+  str = str.toLowerCase();
+  str = str.replace(/\b[a-z]/g, function(char){
+    return char.toUpperCase();
+  });
+  return str.replace(/'./g, function(char){
+    return char.toLowerCase();
+  });
+}
+计算数组中特定值出现的次数：
+const countOccurrences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0);
+// countOccurrences([1,1,2,1,2,3], 1) -> 3
+平面化数组：
+const flatten = arr => arr.reduce((a, v) => a.concat(v), []);
+// flatten([1,[2],3,4]) -> [1,2,3,4]
+平面化数组(deep)：
+const deepFlatten = arr =>
+  arr.reduce((a, v) => a.concat(Array.isArray(v) ? deepFlatten(v) : v), []);
+// deepFlatten([1,[2],[[3],4],5]) -> [1,2,3,4,5]
+数组之间的区别：
+const difference = (a, b) => { const s = new Set(b); return a.filter(x => !s.has(x)); };
+// difference([1,2,3], [1,2]) -> [3]
+两点之间的距离：
+const distance = (x0, y0, x1, y1) => Math.hypot(x1 - x0, y1 - y0);
+// distance(1,1, 2,3) -> 2.23606797749979
+过滤数组中的非唯一值：
+const filterNonUnique = arr => arr.filter(i => arr.indexOf(i) === arr.lastIndexOf(i));
+// filterNonUnique([1,2,2,3,4,4,5]) -> [1,3,5]
+获取数组最大值：
+const arrayMax = arr => Math.max(...arr);
+// arrayMax([10, 1, 5]) -> 10
+测试功能花费的时间：
+const timeTaken = callback => {
+  console.time('timeTaken');
+  const r = callback();
+  console.timeEnd('timeTaken');
+  return r;
+};
+// timeTaken(() => Math.pow(2, 10)) -> 1024
+// (logged): timeTaken: 0.02099609375ms
+
+快速排序：
+Array.prototype.fastSort = function(){//这里不能用箭头函数，注意this
+  if (this.length<=1) {
+    return this;
+  };
+  let idx = this.pop();
+  let arrLeft = [];
+  let arrRight = [];
+  for (let i = 0; i < this.length; i++) {
+   if (this[i]<=idx) {
+     arrLeft.push(this[i]);
+   }else if(this[i]>idx){
+     arrRight.push(this[i]);
+   };
+  };
+  return arrLeft.fastSort().concat(idx,arrRight.fastSort());
+};
+let arr = [12,3,41,16,22,3,45,64,2,15,36,54];
+console.log(arr.fastSort());
+// function fastSort(arr){
+//   if (arr.length<=1) {
+//     return arr;
+//   };
+//   let idx = arr.pop();
+//   let arrLeft = [];
+//   let arrRight = [];
+//   for (let i = 0; i < arr.length; i++) {
+//    if (arr[i]<=idx) {
+//      arrLeft.push(arr[i]);
+//    }else if(arr[i]>idx){
+//      arrRight.push(arr[i]);
+//    };
+//   };
+//   return fastSort(arrLeft).concat(idx,fastSort(arrRight));
+// }
+
+sort排序：
+//sort排序比快速排序更优也更简洁
+//原理：
+arr.sort(compare);
+function compare(x,y){
+  if (x<y) {
+    return -1;
+  }else if(x>y){
+    return 1;
+  }else if (x==y) {
+    return 0;
+  }
+}
+//可以简化为
+function compare(x,y){
+  return x-y;
+}
+//还可用于对象数组的排序
+var arr = [{name: "zlw", age: 24}, {name: "wlz", age: 25}];
+var compare = function (prop) {//这里改造为可根据对象属性名来选择比较项
+    return function (obj1, obj2) {
+        var val1 = obj1[prop];
+        var val2 = obj2[prop];
+        if (val1 < val2) {
+            return -1;
+        } else if (val1 > val2) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}
+arr.sort(compare("age"))
+
+归并排序：
+//归并排序理论上比较优，但实现并不很好
+console.time('归并排序');
+mergeSort(arr);
+console.timeEnd('归并排序');
+console.log(mergeSort(arr));
+function merge(left, right) {
+  var tmp = [];
+  while (left.length && right.length) {
+    if (left[0] < right[0])
+      tmp.push(left.shift());
+    else
+      tmp.push(right.shift());
+  }
+  return tmp.concat(left, right);
+}
+function mergeSort(a) {
+  if (a.length === 1)
+    return a;
+  var mid = ~~(a.length / 2)
+    , left = a.slice(0, mid)
+    , right = a.slice(mid);
+  return merge(mergeSort(left), mergeSort(right));
+}
+
+
+几种求数组最大值算法的比较：
+//拓展运算符和apply的原理相同，运行速度可以认为相同，for循环冒泡较差，大约是前者的两倍时间
+let arr = [12,3,41,16,22,3,45,64,2,15,36,54];
+const max = arr => {
+  console.time('扩展运算符求最大值');
+  Math.max(...arr);
+  console.timeEnd('扩展运算符求最大值');
+}
+const max2 = arr => {
+  console.time('apply求最大值');
+  Math.max.apply(null,arr);
+  console.timeEnd('apply求最大值');
+}
+const max3 = arr => {
+  console.time('for求最大值');
+  let max = arr[0];
+  for (let i = 0; i < arr.length - 1; i++) {
+      max = max < arr[i+1] ? arr[i+1] : max;
+  }
+  console.timeEnd('for求最大值');
+  return max;
+}
+max(arr);
+max2(arr);
+max3(arr);
+
+多维数组查找所有子数组的最大值：
+//本质是不规则树的问题
+const max = (array) => {
+    const a1 = [];
+    const a2 = [];
+    array.forEach((a) => (a instanceof Array) ? a1.push(max(a)) : a2.push(a));
+    a1.push(Math.max(...a2));
+    return a1.reduce((acc, val) => acc.concat(val), []).sort((a, b) => a - b);
+};
+max([1, 2, [3, 4]])//return[2, 4]
+max([1000, [1001, 857, 1]])//return[1000, 1001]
+max([[4, 5, 1, 3], 2 , 6 ,[1000, [1001, 857, 1]]])//return[5, 6, 1000, 1001]
+
+检查是否回文：
+function palindrome(str) {
+  str = str.replace(/\W|_/g,'').toLowerCase();
+  var str1 = str;
+  str = str.split('').reverse().join('');
+  if(str==str1){
+    return true;
+  }else{
+    return false;
+  }
+}
+找出最长的单词：
+function findLongestWord(str) {
+  var arr = str.split(' ');
+  var max = arr[0].length;
+  for(var i=0;i<arr.length;i++){
+    if(arr[i+1]&&arr[i+1].length>max){
+      max = arr[i+1].length;
+    }
+  }
+  return max;
+}
+句中单词首字母大写：
+function titleCase(str) {
+  str = str.toLowerCase();
+  str = str.replace(/\b[a-z]/g, function(char){
+    return char.toUpperCase();
+  });
+  return str.replace(/'./g, function(char){
+    return char.toLowerCase();
+  });
+}
+找出多个数组中的最大数：
+function largestOfFour(arr) {
+  return arr.map(Function.apply.bind(Math.max, null));
+}
+largestOfFour([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]]);
+省略表示字符串：
+function truncate(str, num) {
+  if(str.length>num&&num>3){
+    return str.slice(0,num-3)+'...';
+  }else if(str.length>num&&num<=3){
+    return str.slice(0,num)+'...';
+  }else if(str.length<=num){
+    return str;
+  }
+}
+分割数组：
+function chunk(arr, size) {
+  let newArr = [];
+  for(let i=0;i<arr.length;i+=size){
+    newArr.push(arr.slice(i,i+size));
+  }
+  return newArr;
+}
+比较一个字符串是否含有另一个字符串的所有字符：
+function mutation(arr) {
+  var check = arr[1].toLowerCase().split('');
+  for(let i=0;i<check.length;i++){
+    if(arr[0].toLowerCase().indexOf(check[i])==-1){
+      return false;
+    }
+  }
+  return true;
+}
+mutation(["hello", "hey"]);
+过滤数组假值：
+function bouncer(arr) {
+  return arr.filter(word=>Boolean(word)!=false);
+}
+从数组中删除元素：
+function destroyer(arr) {
+  let [x,...rest] = arguments;
+  console.log(rest);
+  for (var i = 0; i < rest.length; i++) {
+    x=x.filter(word=>{
+      if (word!=rest[i]) {
+        return true;
+      }else{
+        return false;
+      }
+    });
+  };
+  return x;
+}
+destroyer([1, 2, 3, 1, 2, 3], 2, 3);
+数组排序并找出元素索引：
+function where(arr, num) {
+  arr=arr.sort((x,y)=>{
+    if(x>y)
+      return 1;
+    else if(x<y)
+      return -1;
+    else if(x==y)
+      return 0;
+  });
+  for(let i=0;i<arr.length+1;){
+    if(arr[i]<num)
+      i++;
+    else
+      return i;
+  };
+}
+where([40, 60], 50);
+ROT13加密：
+//这里只做了大写字母的加密
+//用map更简洁
+function rot13(str) {
+  var arr = str.split('');
+  arr.forEach((item,index)=>{
+    if ((/[A-M]/g).test(arr[index])) {
+      arr[index]=String.fromCharCode(item.charCodeAt(0)+13);
+    }else if ((/[N-Z]/g).test(arr[index])) {
+      arr[index]=String.fromCharCode(item.charCodeAt(0)-13);
+    }
+  });
+  return arr.join('');
+}
+rot13("SERR PBQR PNZC");
+
+setInterval会无视报错不断调用，及时catch了错误还是会调用
+改用setTimeout的递归调用来代替setInterval
+不要用setInterval来使Ajax每隔一段时间发送问询，因为由于一些原因，某些问询的时间会变得很长，最后客户端会堆满ajax请求
+
+~~按位非两次，会向下取整，可以用于数值转换(如~~false ~~'11')
+
+HTTPS = 数据加密 + 网站认证 + 完整性验证 + HTTP
+
+执行代码钱会先进行一次扫描，将函数声明和变量声明提升
+
+ES6的类知识基于原型继承的语法糖
+
+
+this深入理解：
+var name = "Jay Global";
+var person = {
+    name: 'Jay Person',
+    details: {
+        name: 'Jay Details',
+        print: function() {
+            return this.name;
+        }
+    },
+    print: function() {
+        return this.name;
+    }
+};
+var name1 = person.print;
+var name2 = person.details;
+console.log(name1()); // Jay Global 前面没有调用对象，this指向了window
+console.log(name2.print()) // Jay Details 指向person.details
+
+箭头函数里面this指向函数的构造着而不是指向调用者
+var object = {
+    data: [1,2,3],
+    dataDouble: [1,2,3],
+    double: function() {
+        console.log("this inside of outerFn double()");
+        console.log(this);
+        return this.data.map(function(item) {
+            console.log(this);      // 这里的匿名函数没有调用者，所以this指向了window对象。在严格模式下会指向undefined
+            return item * 2;
+        });
+    },
+    doubleArrow: function() {
+        console.log("this inside of outerFn doubleArrow()");
+        console.log(this);
+        return this.dataDouble.map(item => {
+            console.log(this);      // 箭头函数的this等于构造时上下文中的this，也就是object
+            return item * 2;
+        });
+    }
+};
+object.double();
+object.doubleArrow();
+
+select初始空白：
+window.onload=()=>{
+  document.querySelector('select').selectedIndex = -1;
+}
+select获取每个选项的value:
+<select class="" onchange='selectChange(this[selectedIndex].value)'>
+  <option value="1">筛选价格10元以下的</option>
+  <option value="2">选项2</option>
+  <option value="3">选项3</option>
+</select>
+
+延展操作符：
+1.收集参数(必须放在形参的最后一个)
+2.展开数组()
+
+解构赋值：
+let [a,b,c] = [1,2,3]
+
+ES6数组方法：
+1.map: 映射
+let score = [8, 20, 80, 70, 55];
+let result = score.map(item=>item>=60?'及格':'不及格')
+2.reduce: 汇总
+arr.reduce((temp, item, index)=>temp + item)
+3.filter: 过滤器
+arr.filter(item=>item%3==0)
+4.forEach: 循环
+
+字符串方法：
+1.startsWith
+2.endsWith
+字符串模板：
+let a = 'aa';
+let b = `${a}bb`
+
+类：
+class User = {
+  constructor(name,pass){
+    this.name = name;
+    this.pass = pass;
+  };
+
+  getName(){
+    retuen this.name;
+  };
+  getPass(){
+    retuen this.pass;
+  }
+}
+class VipUser extends User = {
+  constructor(name,pass,level){
+    super(name,pass);
+    this.level = level;
+  }
+}
+
+json:
+1.只能用双引号
+2.key需要引号包围
+JSON.stringify()
+JSON.parse()
+encodeURIComponent()
+
+promise:简化了异步的代码
+Promise.all([$.ajax(), $.ajax()]).then(results=>{}, err=>{})
+
+generator函数：
+function* show(){
+  alert(a);
+  yield;
+  alert(b);
+}
+let genObj = show();
+genObj.next()
+genObj.next()
+可以传参，也可以返回值
+
+promise适合无逻辑读取大量数据
+generator适合有逻辑读取数据
+
+
+
+有两个充电宝A,B，A容量为m，B容量为n，充电宝有3种操作，充电、放电和转移，充电就充满，放电就放空，转移会直到自己没电或对方满电。现在要得到一个剩余电量为t的充电宝，如果有解，输出操作序列，无解输出0.
+比如：输入m,n,t分别为10,7,4，输出：B充电，B转移到A，B充电，B转移到A，此时B剩余电量为4
+.
